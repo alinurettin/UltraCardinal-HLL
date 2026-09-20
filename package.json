@@ -1,0 +1,12 @@
+{
+  "name": "ultracardinal-hll",
+  "version": "1.0.0",
+  "description": "Streaming 64-bit distinct cardinality estimation engine with MurmurHash3, dynamic sparse-to-dense register promotion, and bias correction.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node tests/run_tests.js"
+  },
+  "author": "Ali Nurettin Demir (alinurettin)",
+  "license": "MIT"
+}

@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  ultracardinal-hll:
+    build: .
+    ports:
+      - "6050:6050"
+    environment:
+      - PORT=6050
+      - NODE_ENV=production
+    restart: unless-stopped
