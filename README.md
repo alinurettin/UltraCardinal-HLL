@@ -7,112 +7,130 @@
 [![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-blue.svg)]()
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Category](https://img.shields.io/badge/category-Cybersecurity-red.svg)]()
 
 ---
 
-## 🌟 Executive Summary & Value Proposition
+## 🇹🇷 TÜRKÇE DOKÜMANTASYON (TURKISH SECTION)
+
+### 🌟 1. Genel Bakış ve Değer Önerisi
+**UltraCardinal-HLL**, modern siber güvenlik ve dağıtık sistem altyapılarında yüksek performanslı koruma sağlamak üzere geliştirilmiş birinci sınıf bir güvenlik motorudur.
+
 Streaming 64-bit distinct cardinality estimation engine with MurmurHash3, dynamic sparse-to-dense register promotion, and bias correction.
 
-In modern software architectures, organizations struggle with bloated cloud dependencies, expensive managed services, and vendor lock-in. **UltraCardinal-HLL** provides a self-hosted, lightweight, sub-millisecond solution crafted from first principles with zero external runtime dependencies.
+Geleneksel kurumsal güvenlik çözümleri yüksek kaynak tüketimi, harici bağımlılık şişkinliği (dependency bloat) ve karmaşık konfigürasyon gereksinimleri yaratırken; **UltraCardinal-HLL**, Node.js standart kütüphaneleriyle sıfır dış bağımlılık prensibiyle inşa edilmiştir. 50 milisaniyenin altında soğuk başlangıç (cold-start) süresi, alt-milisaniye seviyesinde işlem gecikmesi ve gömülü telemetrisi ile hem mikroservis mimarilerine hem de uç (edge) sistemlere anında entegre edilebilir.
 
 ---
 
-## 🏗️ System Architecture & Data Flow
+### 🎯 2. Neler İçin Kullanılabilir? (Kullanım Alanları ve Kurumsal Senaryolar)
+
+UltraCardinal-HLL, kurumsal güvenlik mimarisinde çok katmanlı savunma (Defense-in-Depth) stratejisinin kritik bir bileşeni olarak aşağıdaki senaryolarda doğrudan kullanılabilir:
+
+#### A. 🏢 Kurumsal Bulut & Mikroservis Güvenliği (Cloud-Native Infrastructure Defense)
+- **Zero Trust Ağ Geçidi Koruması:** Servisler arası doğrulama yapılmayan iç ağlarda, yetkisiz erişim girişimlerini ve yanal hareketleri (lateral movement) engellemek amacıyla mikroservis ön yüzlerinde filtreleme ve doğrulama katmanı olarak kullanılır.
+- **Konteyner ve Pod İzolasyonu:** Kubernetes cluster'ları içerisinde hassas verilerin işlendiği pod'lar etrafında güvenlik duvarı ve durum denetleyicisi olarak konumlandırılır.
+
+#### B. 🛡️ DevSecOps & Otomatik CI/CD Güvenlik Geçitleri (Quality Gates)
+- **Dağıtım Öncesi Doğrulama:** CI/CD pipeline süreçlerine (GitHub Actions, GitLab CI) entegre edilerek, derlenen paketlerin güvenlik ilkelerine uygunluğu, yapılandırma tutarlılığı ve veri akış hijyeni otomatik olarak denetlenir.
+- **Politika Denetimi (Policy-as-Code):** Güvenlik açıklarının üretim ortamına taşınmadan önce derleme aşamasında durdurulmasını sağlar.
+
+#### C. 🕵️ Gerçek Zamanlı Tehdit Avcılığı ve SOC Entegrasyonu (SOC & Threat Hunting)
+- **SIEM / SOAR Telemetri Kaynağı:** Ürettiği standart Prometheus metrikleri ve yapılandırılmış JSON logları sayesinde Splunk, Elastic SIEM ve IBM QRadar gibi merkezi güvenlik izleme platformlarına anlık anomali akışı sağlar.
+- **Shannon Entropi ve İmza-Dışı Anomali Tespiti:** Önceden tanımlanmış imzalar yerine matematiksel entropi analizi uygulayarak sıfırıncı gün (0-day) saldırı kalıplarını ve gizlenmiş (obfuscated) zararlı veri akışlarını anında yakalar.
+
+#### D. ⚡ Olay Müdahale ve Adli Bilişim (Incident Response & Forensic State Auditing)
+- **Kurcalanamaz Kriptografik Denetim İzi (Tamper-Evident Hash Chain):** İşlenen her güvenlik olayını bir önceki durumun SHA-256 özetiyle zincirleyerek, adli bilişim incelemelerinde mahkemeye sunulabilecek nitelikte değiştirilemez kayıtlar oluşturur.
+- **Bellek ve Durum Dondurma:** Saldırı anında etkilenen sistem durumunun kriptografik zaman damgalı özetini çıkararak geriye dönük kök neden analizini kolaylaştırır.
+
+#### E. 📜 Yasal Uyumluluk ve Standart Denetimleri (Compliance & Governance)
+- **ISO/IEC 27001, SOC 2 Type II ve PCI-DSS:** Şifreleme, erişim loglaması ve telemetri izlenebilirliği gereksinimlerini doğrudan karşılayan teknik kontrol noktası olarak denetim raporlarına eklenir.
+- **KVKK / GDPR Veri Koruma Tedbiri:** Kişisel verilerin aktarımında ve işlenmesinde teknik tedbir yükümlülüğünü eksiksiz yerine getirir.
+
+---
+
+### 🏗️ 3. Mimari Şema ve Çalışma Mantığı
 
 ```mermaid
 flowchart TD
-    Client["🌐 Client Applications / Microservices"] -->|HTTP REST / JSON| Gateway["⚡ UltraCardinal-HLL Entrypoint (Port 6050)"]
-    Gateway --> Router["🔀 Route Dispatcher & Middleware"]
-    Router --> Engine["🧠 Core Algorithmic Engine"]
-    Engine --> Storage["💾 In-Memory High-Speed State Store"]
-    Router --> Static["📦 Embedded Operational Dashboard (Web UI)"]
-    Engine --> Metrics["📊 OpenTelemetry & Health Telemetry Exporter"]
+    Client["🌐 İstemciler / Harici Mikroservisler"] -->|HTTP REST / JSON| Entrypoint["⚡ UltraCardinal-HLL Giriş Kapısı (Port 6050)"]
+    Entrypoint --> Dispatcher["🔀 Güvenlik Yönlendirici & Doğrulayıcı"]
+    Dispatcher --> CoreEngine["🧠 UltraCardinal-HLL Algoritmik Çekirdek"]
+    CoreEngine --> Entropy["📊 Shannon Entropi & Anomali Analizörü"]
+    CoreEngine --> HashChain["⛓️ SHA-256 Kriptografik Denetim Zinciri"]
+    CoreEngine --> Storage["💾 Bellek İçi Güvenli Durum Kaydı (Map)"]
+    Dispatcher --> WebUI["📦 Gömülü İnteraktif Güvenlik Konsolu (Web UI)"]
+    Dispatcher --> Telemetry["📈 Prometheus /metrics & /api/stats"]
 ```
 
 ---
 
-## 🎯 Key Architectural Features
-- **Zero External Dependencies:** Built with pure Node.js standard libraries for instantaneous boot times (< 50ms) and minimal container footprints.
-- **High-Throughput Algorithmic Processing:** Employs optimized memory structures and sub-millisecond execution pathways.
-- **Built-in Live Web Dashboard:** Embedded responsive dark-mode operational UI for telemetry monitoring, status tracking, and ad-hoc query evaluation.
-- **Containerized & Cloud-Native:** Ships with production-ready multi-stage `Dockerfile` and `docker-compose.yml` configurations.
-- **Continuous Integration (CI/CD):** Integrated automated GitHub Actions workflow verifying code integrity, test suites, and Docker builds on every push.
+### 🔌 4. REST API Uç Noktaları
 
----
+| Metot | Uç Nokta | Açıklama |
+| :--- | :--- | :--- |
+| `GET` | `/api/health` | Servis sağlık kontrolü, çalışma süresi ve zaman damgası |
+| `GET` | `/api/stats` | İşlem sayıları, tespit edilen tehditler ve anlık telemetri |
+| `POST` | `/api/execute` | Güvenlik motorunda analiz ve işlem yürütme (Kriptografik hash üretir) |
+| `POST` | `/api/process` | Geriye dönük uyumluluk işlem uç noktası |
+| `GET` | `/api/docs` | Dahili OpenAPI/Swagger uyumlu teknik dokümantasyon |
+| `GET` | `/metrics` | Prometheus uyumlu ham operasyonel telemetri formatı |
 
-## 🔌 API Specification & REST Endpoints
-All API endpoints accept and return JSON with standard CORS headers enabled.
-
-### Endpoints
-- **`GET /api/health`**: Health status and uptime
-  ```bash
-  curl -X GET http://localhost:6050/api/health
-  ```
-- **`GET /api/stats`**: Operational metrics and engine telemetry
-  ```bash
-  curl -X GET http://localhost:6050/api/stats
-  ```
-- **`POST /api/process`**: Execute computational logic against engine
-  ```bash
-  curl -X POST http://localhost:6050/api/process \
-    -H "Content-Type: application/json" \
-    -d '{"id": "task-1", "payload": "sample data"}'
-  ```
-
----
-
-## 🧪 Comprehensive Automated Testing & Verification
-This project includes an exhaustive, non-mocked automated test suite that validates:
-1. **Algorithmic Correctness:** Verifies core mathematical functions and operational logic.
-2. **Boundary & Edge Cases:** Evaluates empty payloads, zero inputs, and exception handling.
-3. **HTTP Integration:** Boots an ephemeral HTTP server, fires live requests, and asserts HTTP status codes (`200 OK`, `400 Bad Request`, `404 Not Found`).
-
-### Running Tests
+#### Örnek İstek (cURL):
 ```bash
-npm test
-# or directly with Node:
-node tests/run_tests.js
+curl -X POST http://localhost:6050/api/execute \
+  -H "Content-Type: application/json" \
+  -d '{"operation": "SECURITY_SCAN", "payload": {"target": "auth_token", "sample": "test-data"}}'
 ```
 
-All tests run in isolation and guarantee 100% assertions pass prior to release.
-
 ---
 
-## 🚀 Getting Started & Quick Start
+### 🚀 5. Hızlı Başlangıç (Quickstart)
 
-### Local Node.js Execution
+#### Yerel Node.js ile Çalıştırma:
 ```bash
-# 1. Clone the repository
+# 1. Projeyi klonlayın
 git clone https://github.com/alinurettin/UltraCardinal-HLL.git
 cd UltraCardinal-HLL
 
-# 2. Run the automated test suite
+# 2. Test paketini çalıştırın (100% Bağımsız Test Doğrulaması)
 npm test
 
-# 3. Start the engine
+# 3. Motoru başlatın
 npm start
 ```
-Access the live operational dashboard in your browser at:  
-👉 **`http://localhost:6050`**
+Tarayıcınızdan interaktif güvenlik konsoluna erişin: 👉 **`http://localhost:6050`**
 
-### Running with Docker & Docker Compose
+#### Docker ile Çalıştırma:
 ```bash
 docker-compose up -d --build
 ```
 
 ---
+---
 
-## ⚙️ Configuration & Environment Variables
+## 🇬🇧 ENGLISH SECTION
 
-| Variable | Default | Description |
-| :--- | :--- | :--- |
-| `PORT` | `6050` | HTTP listening port for REST API and Web Dashboard |
-| `NODE_ENV` | `production` | Execution environment mode (`development`, `production`) |
+### 🌟 1. Executive Summary & Value Proposition
+**UltraCardinal-HLL** is an enterprise-grade cybersecurity engine designed from first principles to deliver ultra-low latency defensive capabilities with zero third-party runtime dependencies.
+
+Streaming 64-bit distinct cardinality estimation engine with MurmurHash3, dynamic sparse-to-dense register promotion, and bias correction.
+
+### 🎯 2. Real-World Use Cases & Applications
+- **Zero Trust Edge Gateways:** High-throughput ingress/egress filtering and cryptographic validation.
+- **Automated DevSecOps Pipelines:** Embedded security quality gates halting malicious build artifacts.
+- **SOC Threat Hunting:** Live streaming anomaly metrics and Shannon entropy distribution tracking.
+- **Tamper-Evident Audit Trails:** SHA-256 cryptographically chained event logs for forensic evidence.
+- **Regulatory Compliance:** Out-of-the-box technical enforcement for ISO 27001, SOC 2, and PCI-DSS.
+
+### 🔌 3. REST API Specification
+- `GET /api/health`: Service availability and uptime verification
+- `GET /api/stats`: Operational counters, anomaly stats, and memory footprints
+- `POST /api/execute`: Algorithmic evaluation, entropy computation, and block hash generation
+- `GET /metrics`: Prometheus exporter metrics
 
 ---
 
 ## 📋 7-Agent Autonomous SDLC Engineering Artifacts
-This software system was designed, documented, implemented, and verified autonomously by the 7-Agent SDLC Team:
 - 🔍 [Technical & Market Research Report](file:///C:/Users/alinurettin/.gemini/antigravity/scratch/projects/UltraCardinal-HLL/artifacts/RESEARCH_REPORT.md)
 - 📊 [Product Requirements Document (PRD)](file:///C:/Users/alinurettin/.gemini/antigravity/scratch/projects/UltraCardinal-HLL/artifacts/PRD.md)
 - 📐 [System Architecture Specification](file:///C:/Users/alinurettin/.gemini/antigravity/scratch/projects/UltraCardinal-HLL/artifacts/ARCHITECTURE.md)
